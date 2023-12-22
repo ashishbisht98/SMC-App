@@ -13,23 +13,48 @@
         android:theme="@style/Theme.SMCApp"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity">
-
-        </activity>
-        <activity android:name=".HomeActivity"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.SMCApp">
+            android:name=".AuthScreen"
+            android:label="@string/title_activity_auth_screen"
+            android:theme="@style/Theme.SMCApp"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".NewMeetingActivity"
-            android:exported="false">
+        <activity
+            android:name=".ui.screens.AddMemberScreen"
+            android:exported="false"
+            android:label="@string/title_activity_add_member_screen"
+            android:theme="@style/Theme.SMCApp" />
+        <activity
+            android:name=".ui.screens.MeetingDetails"
+            android:exported="false"
+            android:label="@string/title_activity_meeting_details"
+            android:theme="@style/Theme.SMCApp" />
+        <activity
+            android:name=".ui.screens.PreviousMeetings"
+            android:exported="false"
+            android:label="@string/title_activity_previous_meetings"
+            android:theme="@style/Theme.SMCApp" />
+        <activity android:name=".ui.screens.MainActivity" />
+        <activity
+            android:name=".ui.screens.HomeActivity"
+            android:exported="true"
+            android:theme="@style/Theme.SMCApp" />
+        <activity
+            android:name=".ui.screens.LoginScreen"
+            android:exported="true"
+            android:theme="@style/Theme.SMCApp">
 
         </activity>
+        <activity
+            android:name=".ui.screens.NewMeetingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.screens.MemberProfile"
+            android:exported="false" />
     </application>
 
 </manifest>

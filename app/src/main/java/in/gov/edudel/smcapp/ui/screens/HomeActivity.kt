@@ -1,4 +1,4 @@
-package `in`.gov.edudel.smcapp
+package `in`.gov.edudel.smcapp.ui.screens
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,27 +9,23 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import `in`.gov.edudel.smcapp.R
 import `in`.gov.edudel.smcapp.ui.theme.SMCAppTheme
 
 sealed class TabItem(val title: String, val icon: Int) {
-    object Meeting : TabItem("Meeting", R.drawable.outline_assignment_24)
+    object Meetings : TabItem("Meeting", R.drawable.outline_assignment_24)
     object Members : TabItem("Members", R.drawable.baseline_person_24)
     companion object {
-        fun values()= listOf(Meeting,Members,)
+        fun values()= listOf(Meetings, Members,)
     }
 }
 
@@ -53,7 +49,7 @@ class HomeActivity : ComponentActivity() {
 
 @Composable
 fun Tabs() {
-    var selectedTab:TabItem by remember { mutableStateOf(TabItem.Meeting) }
+    var selectedTab: TabItem by remember { mutableStateOf(TabItem.Meetings) }
 
     Column {
         TabRow(
@@ -72,7 +68,7 @@ fun Tabs() {
         }
 
         when (selectedTab) {
-            TabItem.Meeting -> MeetingTab()
+            TabItem.Meetings -> MeetingTab()
             TabItem.Members -> MembersTab()
         }
     }

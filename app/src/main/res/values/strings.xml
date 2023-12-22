@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">SMC app</string>
+    <string name="title_activity_previous_meetings">PreviousMeetings</string>
+    <string name="title_activity_meeting_details">MeetingDetails</string>
+    <string name="title_activity_add_member_screen">AddMemberScreen</string>
+    <string name="title_activity_auth_screen">AuthScreen</string>
 </resources>
