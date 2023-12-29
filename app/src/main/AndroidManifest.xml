@@ -17,11 +17,7 @@
             android:label="@string/title_activity_auth_screen"
             android:theme="@style/Theme.SMCApp"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".ui.screens.AddMemberScreen"
@@ -47,7 +43,11 @@
             android:name=".ui.screens.LoginScreen"
             android:exported="true"
             android:theme="@style/Theme.SMCApp">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".ui.screens.NewMeetingActivity"

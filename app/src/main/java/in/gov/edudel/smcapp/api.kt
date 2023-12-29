@@ -9,13 +9,13 @@ import java.time.LocalTime
 
 object api {
     suspend fun getMember(memberId: Int): Member? {
-        delay(2000)
+        delay(1000)
         return Member(1, "amit", "Teacher", "980989889")
     }
 
 
     suspend fun getMeetingDetails(meetingId: Int): Meeting?{
-        delay(2000)
+        delay(1000)
         return Meeting(1, "title", "agenda", LocalDate.now(), LocalTime.NOON, "2128008")
 
     }
