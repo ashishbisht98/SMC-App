@@ -85,8 +85,13 @@ class NewMeetingActivity: ComponentActivity() {
 fun NewMeeting(){
 
     val datePickerState = rememberDatePickerState(null,null,2019..2024)
-    DatePickerDialog(onDismissRequest = { /*TODO*/ }, dismissButton = { Text(text = "Cancel")},
-        confirmButton = { Text(text = "OK",Modifier.clickable {  }) }) {
+    DatePickerDialog(onDismissRequest = { /*TODO*/ }, dismissButton = { Button(onClick = { /*TODO*/ }) {
+        Text(text = "Cancel")
+    } },
+        confirmButton = { Button(onClick = { /*TODO*/ }) {
+            Text(text = "Confirm")
+            
+        } }) {
 
         DatePicker(state = datePickerState)
     }

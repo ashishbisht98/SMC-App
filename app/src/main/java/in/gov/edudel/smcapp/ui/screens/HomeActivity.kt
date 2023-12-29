@@ -19,7 +19,24 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import `in`.gov.edudel.smcapp.R
+import `in`.gov.edudel.smcapp.models.Meeting
 import `in`.gov.edudel.smcapp.ui.theme.SMCAppTheme
+import java.time.LocalDate
+import java.time.LocalTime
+
+private val meetings = listOf(
+    Meeting(1,"Meeting Title 1", "Agenda for Meeting 1", LocalDate.now(), LocalTime.now(), "122122"),
+    Meeting(2,"Meeting Title 2", "Agenda for Meeting 2", LocalDate.now(), LocalTime.now(), "122122"),
+    Meeting(3,"Meeting Title 3", "Agenda for Meeting 3", LocalDate.now(), LocalTime.now(), "122122"),
+    Meeting(4,"Meeting Title 4", "Agenda for Meeting 4", LocalDate.now(), LocalTime.now(), "122122"),
+    Meeting(5,"Meeting Title 5", "Agenda for Meeting 5", LocalDate.now(), LocalTime.now(), "122122"),
+    Meeting(1,"Meeting Title 1", "Agenda for Meeting 1", LocalDate.now(), LocalTime.now(), "122122"),
+    Meeting(2,"Meeting Title 2", "Agenda for Meeting 2", LocalDate.now(), LocalTime.now(), "122122"),
+    Meeting(3,"Meeting Title 3", "Agenda for Meeting 3", LocalDate.now(), LocalTime.now(), "122122"),
+    Meeting(4,"Meeting Title 4", "Agenda for Meeting 4", LocalDate.now(), LocalTime.now(), "122122"),
+    Meeting(5,"Meeting Title 5", "Agenda for Meeting 5", LocalDate.now(), LocalTime.now(), "122122"),
+)
+
 
 sealed class TabItem(val title: String, val icon: Int) {
     object Meetings : TabItem("Meeting", R.drawable.outline_assignment_24)
@@ -68,7 +85,7 @@ fun Tabs() {
         }
 
         when (selectedTab) {
-            TabItem.Meetings -> MeetingTab()
+            TabItem.Meetings -> MeetingList(meetings)
             TabItem.Members -> MembersTab()
         }
     }
