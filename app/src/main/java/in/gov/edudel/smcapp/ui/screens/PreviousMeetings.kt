@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,6 +20,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.currentCompositionLocalContext
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,6 +43,7 @@ import `in`.gov.edudel.smcapp.ui.screens.ui.theme.SMCAppTheme
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import kotlin.random.Random
 
 class PreviousMeetings : ComponentActivity() {
     private val meetings = listOf(
@@ -102,7 +107,9 @@ fun TheList(meetings: List<Meeting>){
 @Composable
 fun MeetingCard(meeting: Meeting) {
     val context = LocalContext.current
-    Card(modifier = Modifier.padding(8.dp).fillMaxWidth(),
+    Card(modifier = Modifier
+        .padding(8.dp)
+        .fillMaxWidth(),
         onClick = {
             context.startActivity(Intent(context, MeetingDetails::class.java).apply {
                 putExtra("meeting.id", meeting.id.toString())
