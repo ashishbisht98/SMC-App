@@ -3,6 +3,7 @@ package `in`.gov.edudel.smcapp.ui.screens
 import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -204,7 +205,7 @@ fun MemberCard(imageId: Int, title: String, action: () -> Unit) {
 fun Meetingitem(m: Meeting) {
     Row(
         verticalAlignment = Alignment.CenterVertically, modifier = Modifier
-            .padding(horizontal = 20.dp)
+            .padding(horizontal = 8.dp)
             .height(120.dp)
             .fillMaxWidth()
     ) {
@@ -213,22 +214,28 @@ fun Meetingitem(m: Meeting) {
             Divider(
                 Modifier
                     .width(3.dp)
-                    .fillMaxHeight()
-                    .align(Alignment.Center),
+                    .fillMaxHeight(),
                 color = Color(0xFFB4D4FF)
             )
-            Text(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .background(color = Color(0xFFFFECD6), shape = CircleShape)
-                    .size(60.dp)
-                    .wrapContentHeight()
-                    .padding(8.dp),
-                color = Color.Black,
-                text = "28\nDec",
-                fontFamily = FontFamily.SansSerif,
-                textAlign = TextAlign.Center
-            )
+//            Column(Modifier.background(color = Color(0xFFFFECD6), shape = CircleShape).padding(8.dp),
+//                verticalArrangement = Arrangement.Top , horizontalAlignment = Alignment.CenterHorizontally
+//                ) {
+                Text(modifier = Modifier.background(color = Color(0xFFFFECD6),
+                    shape = CircleShape).padding(12.dp),
+                    color = Color.Black,
+                    text = "25",
+                    fontWeight = FontWeight.Black,
+                    fontFamily = FontFamily.SansSerif,
+                    textAlign = TextAlign.Center,
+                    fontSize = 18.sp
+                )
+
+                Text(modifier = Modifier.padding(top=26.dp),
+                    color = Color(0x99000000),
+                    text = "dec",
+                    fontSize = 12.sp
+                )
+//            }
 
         }
         MeetingCard(m)

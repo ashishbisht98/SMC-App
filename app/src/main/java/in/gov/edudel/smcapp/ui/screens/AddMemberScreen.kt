@@ -22,7 +22,7 @@ class AddMemberScreen : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting2("Android")
+                    AddMemberForm()
                 }
             }
         }
@@ -30,17 +30,14 @@ class AddMemberScreen : ComponentActivity() {
 }
 
 @Composable
-fun Greeting2(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+fun AddMemberForm(){
+    Text("Add member form")
 }
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview2() {
+fun AddMemberFormPreview() {
     SMCAppTheme {
-        Greeting2("Android")
+        AddMemberForm()
     }
 }
