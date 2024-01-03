@@ -2,14 +2,15 @@ package `in`.gov.edudel.smcapp.ui.screens
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
@@ -37,17 +38,17 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogProperties
 import `in`.gov.edudel.smcapp.models.LoginType
 import `in`.gov.edudel.smcapp.models.LoginViewModel
 import `in`.gov.edudel.smcapp.models.UIState
 import `in`.gov.edudel.smcapp.ui.theme.SMCAppTheme
-
-var OTP:String? = null
 
 class LoginScreen : ComponentActivity() {
     private val vm: LoginViewModel by viewModels()
@@ -59,7 +60,12 @@ class LoginScreen : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    LoginForm()
+                    if(vm.getLoginUser() == null){
+                        LoginForm()
+                    } else{
+                        LocalContext.current.startActivity(Intent(LocalContext.current, HomeActivity::class.java))
+                    }
+                    finish()
                 }
             }
         }
@@ -139,12 +145,9 @@ class LoginScreen : ComponentActivity() {
                         placeholder = {Text("Enter OTP")},
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number) )
                     Button(onClick = {
-                        if(enteredOtp==OTP){
+                        vm.handleOtp(enteredOtp)
+                        if(vm.otpValidated.value){
                             context.startActivity(Intent(context, HomeActivity::class.java))
-                            vm.showOtpDialog.value = false
-                            finish()
-                        } else {
-                            Toast.makeText(context, "Wrong otp", Toast.LENGTH_SHORT).show()
                         }
                     }) {
                         Text(text = "Login")
@@ -152,25 +155,18 @@ class LoginScreen : ComponentActivity() {
                 }
             }
         }
-//        if(uiState !is UIState.Success){
-//            AlertDialog({}) {
-//                when(uiState){
-//                    is UIState.Error -> Icon(Icons.Default.Info, "")
-//                    is UIState.Loading -> CircularProgressIndicator()
-//                    else -> {}
-//                }
-//                Text(uiState.message!!)
-//            }
-//        }
-
 
         when(uiState){
-            is UIState.Loading -> AlertDialog({}) {
-                CircularProgressIndicator()
-                Text(uiState.message!!)
+            is UIState.Loading -> {
+                var showLoading by remember { mutableStateOf(true) }
+                AlertDialog({showLoading=false}, modifier = Modifier.wrapContentSize().background(Color.Yellow)) {
+                    CircularProgressIndicator()
+                    Text(uiState.message!!)
+                }
             }
             is UIState.Error -> {
-                AlertDialog({}) {
+                var showError by remember { mutableStateOf(true) }
+                AlertDialog({showError=false}, modifier = Modifier.wrapContentSize().background(Color.Red)) {
                     Icon(Icons.Default.Info, "")
                     Text(uiState.message!!)
                 }
