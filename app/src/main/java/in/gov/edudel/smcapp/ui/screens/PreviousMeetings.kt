@@ -116,11 +116,10 @@ fun MeetingCard(meeting: Meeting) {
             })
         }) {
         Column(modifier = Modifier.padding(8.dp)) {
-            Text(text = meeting.id.toString())
-            Text(text = meeting.title, fontSize = 20.sp)
+            Text(text = meeting.title!!, fontSize = 20.sp)
             Text(text = meeting.date.toString())
             Text(text = meeting.time.toString())
-            Text(text = meeting.agenda)
+            Text(text = meeting.agenda!!)
         }
     }
 }

@@ -126,11 +126,11 @@ fun MeetingDetailsUI(meeting: Meeting?, padding: PaddingValues) {
             Column(Modifier.padding(10.dp)) {
                 Row {
                     Text("Title: ")
-                    Text(meeting.title, fontWeight = FontWeight.Bold)
+                    Text(meeting.title!!, fontWeight = FontWeight.Bold)
                 }
                 Row {
                     Text("Agenda: ")
-                    Text(meeting.agenda, fontWeight = FontWeight.Bold)
+                    Text(meeting.agenda!!, fontWeight = FontWeight.Bold)
                 }
                 Row {
                     Text("Date: ")

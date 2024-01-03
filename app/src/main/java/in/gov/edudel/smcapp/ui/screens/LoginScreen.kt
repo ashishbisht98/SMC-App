@@ -6,24 +6,26 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -36,18 +38,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
+import `in`.gov.edudel.smcapp.models.LoginType
+import `in`.gov.edudel.smcapp.models.LoginViewModel
+import `in`.gov.edudel.smcapp.models.UIState
 import `in`.gov.edudel.smcapp.ui.theme.SMCAppTheme
-import kotlinx.coroutines.flow.MutableStateFlow
-var OTP = ""
+
+var OTP:String? = null
 
 class LoginScreen : ComponentActivity() {
-    private val vm: LVM by viewModels()
+    private val vm: LoginViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -65,6 +68,9 @@ class LoginScreen : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
     @Composable
     fun LoginForm() {
+
+        val uiState by vm.uiState.collectAsState()
+
         val context = LocalContext.current
         val loginId by vm.loginId.collectAsState()
         val loginType by vm.loginType.collectAsState()
@@ -79,10 +85,10 @@ class LoginScreen : ComponentActivity() {
             Text("Login to the SMC App",
                 modifier = Modifier.padding(vertical = 16.dp),
                 fontSize = 24.sp)
-            
-            val types = listOf("Teacher Member", "Parent Member", "Social Worker", "HOS")
+
+
             ExposedDropdownMenuBox(expanded = isExpanded, onExpandedChange = {isExpanded=it} ) {
-                OutlinedTextField(loginType, {}, readOnly = true,
+                OutlinedTextField(loginType.displayValue, {}, readOnly = true,
                     trailingIcon = {ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)},
                     colors = ExposedDropdownMenuDefaults.textFieldColors(),
                     modifier = Modifier
@@ -94,13 +100,14 @@ class LoginScreen : ComponentActivity() {
 
                 )
                 ExposedDropdownMenu(expanded = isExpanded, onDismissRequest = {isExpanded=false}) {
-                    types.forEach {
-                        DropdownMenuItem( { Text(it) },
+                    LoginType.entries.forEach {
+                        DropdownMenuItem( { Text(it.displayValue) },
                             {
                                 vm.loginType.value = it
-                                loginIdLabel = when(it){
-                                    "Teacher Member", "HOS" ->"Enter Employee ID"
-                                    else -> "Enter Mobile Number"
+                                loginIdLabel = "Enter " + when(it){
+                                    LoginType.HOS, LoginType.Teacher -> "Employee ID"
+                                    LoginType.Zone, LoginType.District, LoginType.Hq, LoginType.Admin ->"Login ID"
+                                    else ->"Mobile Number"
                                 }
                                 isExpanded = false
                             })
@@ -112,8 +119,7 @@ class LoginScreen : ComponentActivity() {
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
             Button(onClick = {
-                sendOtp()
-                vm.showOtpDialog.value = true
+                vm.handleLogin(loginId, loginType)
             }) {
                 Text(text = "Send OTP")
             }
@@ -133,10 +139,10 @@ class LoginScreen : ComponentActivity() {
                         placeholder = {Text("Enter OTP")},
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number) )
                     Button(onClick = {
-                        if(verifyOtp()){
-                            finish()
-                            vm.showOtpDialog.value = false
+                        if(enteredOtp==OTP){
                             context.startActivity(Intent(context, HomeActivity::class.java))
+                            vm.showOtpDialog.value = false
+                            finish()
                         } else {
                             Toast.makeText(context, "Wrong otp", Toast.LENGTH_SHORT).show()
                         }
@@ -145,6 +151,31 @@ class LoginScreen : ComponentActivity() {
                     }
                 }
             }
+        }
+//        if(uiState !is UIState.Success){
+//            AlertDialog({}) {
+//                when(uiState){
+//                    is UIState.Error -> Icon(Icons.Default.Info, "")
+//                    is UIState.Loading -> CircularProgressIndicator()
+//                    else -> {}
+//                }
+//                Text(uiState.message!!)
+//            }
+//        }
+
+
+        when(uiState){
+            is UIState.Loading -> AlertDialog({}) {
+                CircularProgressIndicator()
+                Text(uiState.message!!)
+            }
+            is UIState.Error -> {
+                AlertDialog({}) {
+                    Icon(Icons.Default.Info, "")
+                    Text(uiState.message!!)
+                }
+            }
+            is UIState.Success ->{}
         }
     }
 
@@ -156,17 +187,5 @@ class LoginScreen : ComponentActivity() {
             LoginForm()
         }
     }
-}
-
-fun sendOtp(){
-    OTP = "1234"
-}
-
-fun verifyOtp() = OTP=="1234"
-
-class LVM: ViewModel(){
-    val loginType = MutableStateFlow("")
-    val loginId = MutableStateFlow("")
-    val showOtpDialog = MutableStateFlow(false)
 
 }
