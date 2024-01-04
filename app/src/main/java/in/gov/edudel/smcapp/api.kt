@@ -1,15 +1,19 @@
 package `in`.gov.edudel.smcapp
 
 import android.content.Context
+import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import `in`.gov.edudel.smcapp.models.Meeting
 import `in`.gov.edudel.smcapp.models.Member
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.suspendCancellableCoroutine
 import org.json.JSONException
 import org.json.JSONObject
 import java.time.LocalDate
 import java.time.LocalTime
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 object api {
 
@@ -61,6 +65,19 @@ object api {
     }
 
     fun sendOtp(mobile: String) = if(mobile=="1234") "1234" else null //SMSService.sendOTP(mobile)
+
+
+    suspend fun fetchData(url: String, params: Map<String, String>): String = suspendCancellableCoroutine {flow->
+        SmcApp.requestQueue.add(object: StringRequest(Request.Method.GET, url, {
+            flow.resume(it)
+        }, {
+            flow.resumeWithException(it)
+        }){
+            override fun getParams() = params
+        })
+
+    }
+
 
 
 //    fun getEmployeeDetails(empId: String, context: Context){

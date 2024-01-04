@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -64,8 +65,9 @@ class LoginScreen : ComponentActivity() {
                         LoginForm()
                     } else{
                         LocalContext.current.startActivity(Intent(LocalContext.current, HomeActivity::class.java))
+                        finish()
                     }
-                    finish()
+
                 }
             }
         }
@@ -159,17 +161,20 @@ class LoginScreen : ComponentActivity() {
         when(uiState){
             is UIState.Loading -> {
                 var showLoading by remember { mutableStateOf(true) }
-                AlertDialog({showLoading=false}, modifier = Modifier.wrapContentSize().background(Color.Yellow)) {
-                    CircularProgressIndicator()
-                    Text(uiState.message!!)
-                }
+                AlertDialog(onDismissRequest = {},
+                    confirmButton = { },
+                    text = { Text(uiState.message)},
+                    icon = { CircularProgressIndicator() }
+                )
             }
+
             is UIState.Error -> {
-                var showError by remember { mutableStateOf(true) }
-                AlertDialog({showError=false}, modifier = Modifier.wrapContentSize().background(Color.Red)) {
-                    Icon(Icons.Default.Info, "")
-                    Text(uiState.message!!)
-                }
+                AlertDialog(onDismissRequest = { vm.uiState.value = UIState.Success },
+                    confirmButton = { Text("OK", Modifier.padding(8.dp).clickable { vm.uiState.value = UIState.Success }) },
+                    title = { Text("Error") },
+                    text = { Text(uiState.message)},
+                    icon = { Icon(Icons.Default.Info, "Error") },
+                )
             }
             is UIState.Success ->{}
         }

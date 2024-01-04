@@ -1,6 +1,7 @@
 package `in`.gov.edudel.smcapp
 
 import android.content.Context
+import android.preference.PreferenceDataStore
 import `in`.gov.edudel.smcapp.models.User
 import `in`.gov.edudel.smcapp.models.User1
 
@@ -31,5 +32,17 @@ object UserService {
 //            putString("user.districtId", user.districtId)
 //        }
 //    }
+
+    fun login(user: User): Boolean{
+        return false
+    }
+
+    fun logout(){
+
+    }
+
+    fun getCurrentUser(): User?{
+        return null
+    }
 
 }

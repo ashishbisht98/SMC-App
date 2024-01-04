@@ -3,6 +3,7 @@ package `in`.gov.edudel.smcapp.models
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import `in`.gov.edudel.smcapp.UserService
 import `in`.gov.edudel.smcapp.api
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -16,9 +17,7 @@ class LoginViewModel: ViewModel(){
 
     var uiState = MutableStateFlow<UIState>(UIState.Success)
 
-    fun getLoginUser(): User?{
-        return User(0,"", "", "", "", "", "", "")
-    }
+    fun getLoginUser() = UserService.getCurrentUser()
 
     fun handleLogin(loginId: String, loginType: LoginType) = viewModelScope.launch{
         uiState.value = UIState.Loading("Getting User Profile")
