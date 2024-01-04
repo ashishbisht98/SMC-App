@@ -109,7 +109,7 @@ fun MeetingCard(meeting: Meeting) {
     val context = LocalContext.current
     Card(modifier = Modifier
         .padding(8.dp)
-        .fillMaxWidth(),
+        .fillMaxWidth(), colors = CardDefaults.cardColors( containerColor = Color(0xffeaf1fb),),
         onClick = {
             context.startActivity(Intent(context, MeetingDetails::class.java).apply {
                 putExtra("meeting.id", meeting.id.toString())

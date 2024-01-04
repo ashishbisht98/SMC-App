@@ -1,5 +1,6 @@
 package `in`.gov.edudel.smcapp.ui.screens
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -23,6 +25,7 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -45,15 +48,19 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogProperties
+import androidx.core.app.NavUtils
 import `in`.gov.edudel.smcapp.models.NewMeetingViewModel
 import `in`.gov.edudel.smcapp.ui.theme.SMCAppTheme
 import java.time.Instant
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.Formatter
+import java.util.Locale
 
 
-class NewMeetingActivity: ComponentActivity() {
+class NewMeetingActivity : ComponentActivity() {
     val vm: NewMeetingViewModel by viewModels()
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -65,12 +72,27 @@ class NewMeetingActivity: ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Scaffold(
-                        topBar = { TopAppBar(
-                            title = { Text("Create new Meeting") },
-                            navigationIcon = {Icon(Icons.Default.Close, contentDescription = "close")}
-                            ) }
+                        topBar = {
+                            TopAppBar(
+                                title = { Text("Create new Meeting") },
+                                navigationIcon = {
+                                    Icon(
+                                        Icons.Default.Close,
+                                        contentDescription = "close",
+                                        Modifier.padding(12.dp)
+                                    )
+                                    IconButton(onClick = {
+                                        NavUtils.navigateUpTo(
+                                            this,
+                                            Intent(this, HomeActivity::class.java)
+                                        )
+                                    }) {
+                                    }
+                                }
+                            )
+                        }
                     ) {
-                        Box(modifier = Modifier.padding(it)){
+                        Box(modifier = Modifier.padding(it)) {
                             NewMeeting()
                         }
                     }
@@ -96,17 +118,21 @@ class NewMeetingActivity: ComponentActivity() {
                 .padding(8.dp)
                 .shadow(8.dp),
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(top = 16.dp)) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(top = 16.dp)
+            ) {
 
                 OutlinedTextField(value = title,
-                    onValueChange = {vm.title.value = it},
-                    label={ Text(text = "Title")}
+                    onValueChange = { vm.title.value = it },
+                    label = { Text(text = "Title") }
                 )
-                OutlinedTextField(value = agenda,
+                OutlinedTextField(
+                    value = agenda,
                     onValueChange = { vm.agenda.value = it },
-                    label={ Text(text = "Agenda")},
-                    minLines = 4, maxLines = 6 )
+                    label = { Text(text = "Agenda") },
+                    minLines = 4, maxLines = 6
+                )
                 Spacer(modifier = Modifier.height(20.dp))
 //                TextField(
 //                    date.format(DateTimeFormatter.ofPattern("dd MMM yyyy")), {},
@@ -116,18 +142,26 @@ class NewMeetingActivity: ComponentActivity() {
 //                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
 //                )
 
-                Row(Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly){
-                    OutlinedButton(onClick = {vm.showDatePicker.value = true}) {
-                        Text(date.toString())
+                Column(Modifier.fillMaxWidth().padding(start = 32.dp), horizontalAlignment = Alignment.Start) {
+
+                    Row (verticalAlignment = Alignment.CenterVertically) {
+
+                        Text(text = "Select a Date",Modifier.padding(end = 30.dp))
+                        OutlinedButton(onClick = { vm.showDatePicker.value = true }) {
+                            Text(date.toString())
+                        }
                     }
 
-                    OutlinedButton(onClick = {vm.showTimePicker.value = true}) {
-                        Text(time.toString())
+                    Row (verticalAlignment = Alignment.CenterVertically) {
+                        Text(text = "Select a Time",Modifier.padding(end = 30.dp))
+                        OutlinedButton(onClick = { vm.showTimePicker.value = true }) {
+                            Text(time.format(DateTimeFormatter.ofPattern("hh:mm a", Locale.US)))
+                        }
                     }
+
                 }
 
-                Button(onClick = { /*TODO*/ }) {
+                Button(onClick = { /*TODO*/ },Modifier.padding(10.dp)) {
                     Text("Create")
                 }
                 if (showDatePicker) {
@@ -144,19 +178,23 @@ class NewMeetingActivity: ComponentActivity() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun ShowDatePicker(){
+    fun ShowDatePicker() {
         val datePickerState = rememberDatePickerState(null, null, 2022..2024)
         DatePickerDialog(onDismissRequest = { vm.showDatePicker.value = false },
-            dismissButton = { TextButton(onClick = { /*TODO*/ }) {
-                Text(text = "Cancel", modifier = Modifier.padding(10.dp))
-            } },
+            dismissButton = {
+                Button(onClick = { vm.showDatePicker.value = false }) {
+                    Text(text = "Cancel")
+
+                }
+            },
             confirmButton = {
-                TextButton(onClick = {
+                Button(onClick = {
                     vm.showDatePicker.value = false
                     vm.date.value = Instant.ofEpochMilli(datePickerState.selectedDateMillis!!)
-                        .atZone(ZoneId.systemDefault()).toLocalDate() }
+                        .atZone(ZoneId.systemDefault()).toLocalDate()
+                }
                 ) {
-                    Text(text = "OK", modifier = Modifier.padding(10.dp))
+                    Text(text = "OK")
                 }
             }) {
             DatePicker(state = datePickerState)
@@ -166,7 +204,7 @@ class NewMeetingActivity: ComponentActivity() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun ShowTimePicker(){
+    fun ShowTimePicker() {
         val timePickerState = rememberTimePickerState()
         DatePickerDialog(
             onDismissRequest = { vm.showTimePicker.value = false },
@@ -174,10 +212,11 @@ class NewMeetingActivity: ComponentActivity() {
                 Button(onClick = {
                     vm.showTimePicker.value = false
                     vm.time.value = LocalTime.of(timePickerState.hour, timePickerState.minute)
-                }){Text("OK") }
-            }
-        ){
-            TimePicker(state = timePickerState)
+                }) { Text("OK") }
+            })
+        {
+
+            TimePicker(state = timePickerState,  Modifier.padding(15.dp).align(Alignment.CenterHorizontally))
         }
     }
 

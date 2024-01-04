@@ -1,13 +1,16 @@
 package `in`.gov.edudel.smcapp.ui.screens
 
 import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -22,9 +25,13 @@ import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -50,11 +57,11 @@ import `in`.gov.edudel.smcapp.models.Member
 
 @Composable
 fun MembersTab() {
-    var members:List<Member>? by remember {
-      mutableStateOf(emptyList<Member>())
+    var members: List<Member>? by remember {
+        mutableStateOf(emptyList<Member>())
     }
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         members = api.getMembers("2020202")
     }
     val context = LocalContext.current
@@ -62,13 +69,13 @@ fun MembersTab() {
         Spacer(modifier = Modifier.height(12.dp))
         Button(
             onClick = {
-                      context.startActivity(Intent(context, AddMemberScreen::class.java))
+                context.startActivity(Intent(context, AddMemberScreen::class.java))
             },
             modifier = Modifier
                 .padding(10.dp)
                 .height(50.dp)
                 .align(Alignment.End),
-            colors = ButtonDefaults.buttonColors(contentColor = Color.White ),
+            colors = ButtonDefaults.buttonColors(contentColor = Color.White),
             shape = RoundedCornerShape(8.dp)
         )
         {
@@ -91,19 +98,19 @@ fun MembersTab() {
                 )
             }
         }
-        if(members==null){
+        if (members == null) {
             Text("Error")
 
         }
-        members?.let{
-            if(it.size>0){
+        members?.let {
+            if (it.size > 0) {
                 LazyColumn(contentPadding = PaddingValues(vertical = 16.dp, horizontal = 8.dp)) {
                     items(it) { member ->
                         MemberCard(member)
                     }
                 }
             } else {
-                Text(text ="No members added")
+                Text(text = "No members added")
             }
         }
 
@@ -113,7 +120,7 @@ fun MembersTab() {
 @Preview
 @Composable
 fun PreviewLayoutMem() {
-    MembersTab()
+    MemberCard(Member(0, "ashish", "parent", "Male", "798652465"))
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -140,7 +147,7 @@ fun MemberCard(member: Member) {
                     .weight(1F)
             )
             Spacer(modifier = Modifier.width(26.dp))
-            Column(Modifier.weight(2f)){
+            Column(Modifier.weight(2f)) {
                 Text(
                     text = member.name,
                     fontWeight = FontWeight.Bold,
@@ -152,7 +159,34 @@ fun MemberCard(member: Member) {
                 )
             }
             Spacer(modifier = Modifier.width(26.dp))
-            Icon(Icons.Default.MoreVert, "", Modifier.align(Alignment.Top))
+            //  Icon(Icons.Default.MoreVert, "", Modifier.align(Alignment.Top))
+
+            val context = LocalContext.current
+            var expanded by remember { mutableStateOf(false) }
+
+            Box {
+                IconButton(onClick = { expanded = !expanded }) {
+                    Icon(Icons.Default.MoreVert, "options")
+                }
+                DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+
+                    DropdownMenuItem(
+                        text = { Text(text = "Edit") },
+                        onClick = { Toast.makeText(context, "Edit", Toast.LENGTH_SHORT).show() },
+
+                        )
+                    Divider(
+                        Modifier
+                            .fillMaxWidth().padding(5.dp),
+                        color = Color(0xFF83A2FF)
+                    )
+                    DropdownMenuItem(text = { Text(text = "Delete") }, onClick =
+                    { Toast.makeText(context, "Delete", Toast.LENGTH_SHORT).show() }
+                    )
+                }
+            }
+
+
 //            Image(
 //                painter = painterResource(id = R.drawable.cancel),
 //                contentDescription = null,

@@ -17,6 +17,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -50,6 +52,9 @@ import `in`.gov.edudel.smcapp.models.LoginType
 import `in`.gov.edudel.smcapp.models.LoginViewModel
 import `in`.gov.edudel.smcapp.models.UIState
 import `in`.gov.edudel.smcapp.ui.theme.SMCAppTheme
+import kotlinx.coroutines.flow.MutableStateFlow
+
+var OTP = ""
 
 class LoginScreen : ComponentActivity() {
     private val vm: LoginViewModel by viewModels()
@@ -85,74 +90,98 @@ class LoginScreen : ComponentActivity() {
 
         var isExpanded by remember { mutableStateOf(false) }
         var loginIdLabel by remember { mutableStateOf("") }
-        Column(
-            Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Text("Login to the SMC App",
-                modifier = Modifier.padding(vertical = 16.dp),
-                fontSize = 24.sp)
 
-
-            ExposedDropdownMenuBox(expanded = isExpanded, onExpandedChange = {isExpanded=it} ) {
-                OutlinedTextField(loginType.displayValue, {}, readOnly = true,
-                    trailingIcon = {ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)},
-                    colors = ExposedDropdownMenuDefaults.textFieldColors(),
-                    modifier = Modifier
-                        .menuAnchor()
-                        .focusProperties {
-                            canFocus = false
-                            enter = { FocusRequester.Cancel }
-                        }
-
+            Card(
+                modifier = Modifier
+                    .padding(5.dp).wrapContentSize(), elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFFf2f6fc),
                 )
-                ExposedDropdownMenu(expanded = isExpanded, onDismissRequest = {isExpanded=false}) {
-                    LoginType.entries.forEach {
-                        DropdownMenuItem( { Text(it.displayValue) },
-                            {
-                                vm.loginType.value = it
-                                loginIdLabel = "Enter " + when(it){
-                                    LoginType.HOS, LoginType.Teacher -> "Employee ID"
-                                    LoginType.Zone, LoginType.District, LoginType.Hq, LoginType.Admin ->"Login ID"
-                                    else ->"Mobile Number"
-                                }
-                                isExpanded = false
-                            })
+            ) {
+                Column(Modifier.padding(5.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                Text(
+                    "Login to the SMC App",
+                    modifier = Modifier.padding(10.dp),
+                    fontSize = 20.sp,
+                )
+
+                val types = listOf("Teacher Member", "Parent Member", "Social Worker", "HOS")
+
+                    ExposedDropdownMenuBox(
+                    expanded = isExpanded,
+                    onExpandedChange = { isExpanded = !isExpanded }) {
+                    OutlinedTextField(loginType.displayValue, {}, readOnly = true,
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded) },
+                        colors = ExposedDropdownMenuDefaults.textFieldColors(),
+                        modifier = Modifier
+                            .menuAnchor()
+                            .padding(10.dp)
+                            .focusProperties {
+                                canFocus = false
+                                enter = { FocusRequester.Cancel }
+                            }
+
+                    )
+
+                    ExposedDropdownMenu(
+                        expanded = isExpanded,
+                        onDismissRequest = { isExpanded = false }) {
+                        LoginType.entries.forEach {
+                            DropdownMenuItem( { Text(it.displayValue) },
+                                {
+                                    vm.loginType.value = it
+                                    loginIdLabel = "Enter " + when(it){
+                                        LoginType.HOS, LoginType.Teacher -> "Employee ID"
+                                        LoginType.Zone, LoginType.District, LoginType.Hq, LoginType.Admin ->"Login ID"
+                                        else ->"Mobile Number"
+                                    }
+                                    isExpanded = false
+                                })
+                        }
                     }
                 }
-            }
-            OutlinedTextField(value = loginId, onValueChange = { vm.loginId.value = it },
-                Modifier.padding(bottom = 12.dp), label = { Text(loginIdLabel) },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-            )
-            Button(onClick = {
-                vm.handleLogin(loginId, loginType)
-            }) {
-                Text(text = "Send OTP")
+                OutlinedTextField(
+                    value = loginId, onValueChange = { vm.loginId.value = it },
+                    Modifier.padding(10.dp), label = { Text(loginIdLabel) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                )
+                Button(onClick = {
+                    vm.handleLogin(loginId, loginType)
+                }) {
+                    Text(text = "Send OTP")
+                }
             }
         }
 
         val showOtpDialog by vm.showOtpDialog.collectAsState()
         if(showOtpDialog){
             ModalBottomSheet(onDismissRequest = { vm.showOtpDialog.value = false }) {
-                Column( Modifier.padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(
+                    Modifier.padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     Text("Enter the otp sent to your mobile number XXX720")
 
                     var enteredOtp by remember { mutableStateOf("") }
-                    OutlinedTextField(value = enteredOtp, onValueChange = {enteredOtp=it},
-                        Modifier.padding(bottom = 12.dp),
-                        label = { Text("")},
-                        placeholder = {Text("Enter OTP")},
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number) )
+                    OutlinedTextField(
+                        value = enteredOtp, onValueChange = { enteredOtp = it },
+                        Modifier.padding(bottom = 5.dp),
+                        label = { Text("") },
+                        placeholder = { Text("Enter OTP") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    )
                     Button(onClick = {
                         vm.handleOtp(enteredOtp)
                         if(vm.otpValidated.value){
                             context.startActivity(Intent(context, HomeActivity::class.java))
                         }
-                    }) {
-                        Text(text = "Login")
+                    },
+                        Modifier.padding(bottom = 80.dp)
+                        ) {
+                        Text(text = "Submit")
                     }
                 }
             }
