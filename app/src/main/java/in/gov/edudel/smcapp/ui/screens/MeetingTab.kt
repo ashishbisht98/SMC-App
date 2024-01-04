@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
@@ -217,25 +218,24 @@ fun Meetingitem(m: Meeting) {
                     .fillMaxHeight(),
                 color = Color(0xFFB4D4FF)
             )
-//            Column(Modifier.background(color = Color(0xFFFFECD6), shape = CircleShape).padding(8.dp),
-//                verticalArrangement = Arrangement.Top , horizontalAlignment = Alignment.CenterHorizontally
-//                ) {
+            Column(Modifier.background(color = Color(0xFFFFECD6), shape = CircleShape).size(60.dp).padding(10.dp),
+                verticalArrangement = Arrangement.Top , horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                 Text(modifier = Modifier.background(color = Color(0xFFFFECD6),
-                    shape = CircleShape).padding(12.dp),
+                    shape = CircleShape).padding(0.dp),
                     color = Color.Black,
                     text = "25",
                     fontWeight = FontWeight.Black,
-                    fontFamily = FontFamily.SansSerif,
-                    textAlign = TextAlign.Center,
+                    //fontFamily = FontFamily.SansSerif,
                     fontSize = 18.sp
                 )
 
-                Text(modifier = Modifier.padding(top=26.dp),
+                Text(modifier = Modifier.padding(top=0.dp),
                     color = Color(0x99000000),
                     text = "dec",
                     fontSize = 12.sp
                 )
-//            }
+           }
 
         }
         MeetingCard(m)
@@ -246,14 +246,14 @@ fun Meetingitem(m: Meeting) {
 
 @Composable
 fun MeetingList(list: List<Meeting>) {
-
+    val context = LocalContext.current
     Scaffold(floatingActionButton = {
         ExtendedFloatingActionButton(
-            onClick = { },
-            icon = { Icon(Icons.Filled.Edit, "Extended floating action button.") },
-            text = { Text(text = "Extended FAB") },
-
+            onClick = { context.startActivity(Intent(context, NewMeetingActivity::class.java))},
+            icon = { Icon(Icons.Filled.AddCircle, "Extended floating action button.") },
+            text = { Text(text = "Create Meeting") }, containerColor = Color(0xffc4eed0)
             )
+
     }) { abc ->
         LazyColumn(Modifier.padding(abc)) {
             items(list) {

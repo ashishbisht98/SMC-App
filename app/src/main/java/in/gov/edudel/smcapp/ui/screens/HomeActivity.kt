@@ -64,9 +64,9 @@ val tabs = listOf(
     TabItem2("Home", Icons.Outlined.Home, Icons.Filled.Home ){ MeetingList(list = meetings) },
     TabItem2("Members", Icons.Outlined.CheckCircle, Icons.Filled.CheckCircle ){ MembersTab() },
 
-    TabItem2("Account", Icons.Outlined.AccountCircle, Icons.Filled.AccountCircle ){
-        Text("account")
-    }
+//    TabItem2("Account", Icons.Outlined.AccountCircle, Icons.Filled.AccountCircle ){
+//        Text("account")
+//    }
 )
 
 @OptIn(ExperimentalComposeUiApi::class)
