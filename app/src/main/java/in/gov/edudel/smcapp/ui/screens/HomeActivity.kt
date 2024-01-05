@@ -1,5 +1,6 @@
 package `in`.gov.edudel.smcapp.ui.screens
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,47 +9,122 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.*
-
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.core.app.NavUtils
 import `in`.gov.edudel.smcapp.R
 import `in`.gov.edudel.smcapp.models.Meeting
+import `in`.gov.edudel.smcapp.ui.screens.ui.theme.roboto
 import `in`.gov.edudel.smcapp.ui.theme.SMCAppTheme
 import java.time.LocalDate
 import java.time.LocalTime
 
 private val meetings = listOf(
-    Meeting(1,"Meeting Title 1", "Agenda for Meeting 1", LocalDate.now(), LocalTime.now(), "122122"),
-    Meeting(2,"Meeting Title 2", "Agenda for Meeting 2", LocalDate.now(), LocalTime.now(), "122122"),
-    Meeting(3,"Meeting Title 3", "Agenda for Meeting 3", LocalDate.now(), LocalTime.now(), "122122"),
-    Meeting(4,"Meeting Title 4", "Agenda for Meeting 4", LocalDate.now(), LocalTime.now(), "122122"),
-    Meeting(5,"Meeting Title 5", "Agenda for Meeting 5", LocalDate.now(), LocalTime.now(), "122122"),
-    Meeting(1,"Meeting Title 1", "Agenda for Meeting 1", LocalDate.now(), LocalTime.now(), "122122"),
-    Meeting(2,"Meeting Title 2", "Agenda for Meeting 2", LocalDate.now(), LocalTime.now(), "122122"),
-    Meeting(3,"Meeting Title 3", "Agenda for Meeting 3", LocalDate.now(), LocalTime.now(), "122122"),
-    Meeting(4,"Meeting Title 4", "Agenda for Meeting 4", LocalDate.now(), LocalTime.now(), "122122"),
-    Meeting(5,"Meeting Title 5", "Agenda for Meeting 5", LocalDate.now(), LocalTime.now(), "122122"),
+    Meeting(
+        1,
+        "Meeting Title 1",
+        "Agenda for Meeting 1",
+        LocalDate.now(),
+        LocalTime.now(),
+        "122122"
+    ),
+    Meeting(
+        2,
+        "Meeting Title 2",
+        "Agenda for Meeting 2",
+        LocalDate.now(),
+        LocalTime.now(),
+        "122122"
+    ),
+    Meeting(
+        3,
+        "Meeting Title 3",
+        "Agenda for Meeting 3",
+        LocalDate.now(),
+        LocalTime.now(),
+        "122122"
+    ),
+    Meeting(
+        4,
+        "Meeting Title 4",
+        "Agenda for Meeting 4",
+        LocalDate.now(),
+        LocalTime.now(),
+        "122122"
+    ),
+    Meeting(
+        5,
+        "Meeting Title 5",
+        "Agenda for Meeting 5",
+        LocalDate.now(),
+        LocalTime.now(),
+        "122122"
+    ),
+    Meeting(
+        1,
+        "Meeting Title 1",
+        "Agenda for Meeting 1",
+        LocalDate.now(),
+        LocalTime.now(),
+        "122122"
+    ),
+    Meeting(
+        2,
+        "Meeting Title 2",
+        "Agenda for Meeting 2",
+        LocalDate.now(),
+        LocalTime.now(),
+        "122122"
+    ),
+    Meeting(
+        3,
+        "Meeting Title 3",
+        "Agenda for Meeting 3",
+        LocalDate.now(),
+        LocalTime.now(),
+        "122122"
+    ),
+    Meeting(
+        4,
+        "Meeting Title 4",
+        "Agenda for Meeting 4",
+        LocalDate.now(),
+        LocalTime.now(),
+        "122122"
+    ),
+    Meeting(
+        5,
+        "Meeting Title 5",
+        "Agenda for Meeting 5",
+        LocalDate.now(),
+        LocalTime.now(),
+        "122122"
+    ),
 )
 
 
@@ -56,13 +132,13 @@ sealed class TabItem(val title: String, val icon: Int) {
     object Meetings : TabItem("Meeting", R.drawable.outline_assignment_24)
     object Members : TabItem("Members", R.drawable.baseline_person_24)
     companion object {
-        fun values()= listOf(Meetings, Members,)
+        fun values() = listOf(Meetings, Members)
     }
 }
 
 val tabs = listOf(
-    TabItem2("Home", Icons.Outlined.Home, Icons.Filled.Home ){ MeetingList(list = meetings) },
-    TabItem2("Members", Icons.Outlined.CheckCircle, Icons.Filled.CheckCircle ){ MembersTab() },
+    TabItem2("Home", Icons.Outlined.Home, Icons.Filled.Home) { MeetingList(list = meetings) },
+    TabItem2("Members", Icons.Outlined.CheckCircle, Icons.Filled.CheckCircle) { MembersTab() },
 
 //    TabItem2("Account", Icons.Outlined.AccountCircle, Icons.Filled.AccountCircle ){
 //        Text("account")
@@ -71,19 +147,73 @@ val tabs = listOf(
 
 @OptIn(ExperimentalComposeUiApi::class)
 class HomeActivity : ComponentActivity() {
+
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            SMCAppTheme{
-            // A surface container using the 'background' color from the theme
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background
-            ) {
-                Tabs2(tabs)
+            SMCAppTheme {
+                // A surface container using the 'background' color from the theme
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                )
+                {
+                    Scaffold(
+                        topBar = {
+                            TopAppBar(
+                                title = {
+                                    Text(
+                                        "SMC App",
+                                        fontFamily = roboto,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 20.sp
+                                    )
+                                },
+                                actions = {
+                                    Button(
+                                        onClick = {
+                                            startActivity(
+                                                Intent(
+                                                    this@HomeActivity,
+                                                    LoginScreen::class.java
+                                                )
+                                            )
+                                        },
+                                        Modifier
+                                            .background(
+                                                color = Color.Transparent,
+                                                shape = CircleShape
+                                            )
+                                            .padding(5.dp)
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.resource_switch),
+                                            contentDescription = null,
+                                            Modifier.size(15.dp)
+                                        )
+                                        Spacer(modifier = Modifier.padding(5.dp))
+                                        Text(text = "Logout", fontFamily = roboto, fontWeight = FontWeight.W600)
+                                    }
+                                },
+                                colors = TopAppBarDefaults.topAppBarColors(
+                                    containerColor = Color(0xFFD6E6F2),
+                                    titleContentColor = Black,
+                                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
+                                    actionIconContentColor = MaterialTheme.colorScheme.onSecondary
+                                ),
+
+                                )
+                        }
+                    ) {
+                        Box(modifier = Modifier.padding(it), contentAlignment = Alignment.Center) {
+                            Tabs2(tabs)
+                        }
+                    }
+
+                }
             }
-        }
         }
     }
 }
@@ -102,7 +232,7 @@ fun Tabs() {
                 Tab(
                     selected = selectedTab == tab,
                     onClick = { selectedTab = tab },
-                    icon = { Image(painterResource(tab.icon),"content description") },
+                    icon = { Image(painterResource(tab.icon), "content description") },
                     text = { Text(tab.title) }
                 )
             }
@@ -136,14 +266,14 @@ fun DefaultPreview() {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Tabs2(tabs: List<TabItem2>){
+fun Tabs2(tabs: List<TabItem2>) {
     var selectedTab by remember { mutableIntStateOf(0) }
     val pagerState = rememberPagerState { tabs.size }
-    LaunchedEffect(selectedTab){
-            pagerState.animateScrollToPage(selectedTab)
+    LaunchedEffect(selectedTab) {
+        pagerState.animateScrollToPage(selectedTab)
     }
     LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress) {
-        if(!pagerState.isScrollInProgress)
+        if (!pagerState.isScrollInProgress)
             selectedTab = pagerState.currentPage
     }
 
@@ -152,18 +282,31 @@ fun Tabs2(tabs: List<TabItem2>){
             tabs.forEachIndexed { myIndex, tab ->
                 Tab(
                     selected = selectedTab == myIndex,
-                    onClick = {selectedTab = myIndex},
-                    icon = { Icon(if(selectedTab == myIndex)tab.activeIcon else tab.icon, tab.title) },
-                    text = {Text(tab.title)}
+                    onClick = { selectedTab = myIndex },
+                    icon = {
+                        Icon(
+                            if (selectedTab == myIndex) tab.activeIcon else tab.icon,
+                            tab.title
+                        )
+                    },
+                    text = { Text(tab.title, fontFamily = roboto, fontWeight = FontWeight.Bold, fontSize = 15.sp) }
                 )
             }
         }
-        HorizontalPager(state = pagerState, verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth().weight(1f)
+        HorizontalPager(
+            state = pagerState, verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
         ) {
-             tabs[it].content()
+            tabs[it].content()
         }
     }
 }
 
-data class TabItem2(val title:String, val icon: ImageVector, val activeIcon: ImageVector, val content: @Composable ()->Unit)
+data class TabItem2(
+    val title: String,
+    val icon: ImageVector,
+    val activeIcon: ImageVector,
+    val content: @Composable () -> Unit
+)

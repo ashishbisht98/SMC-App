@@ -16,7 +16,7 @@ val provider = GoogleFont.Provider(
     providerPackage = "com.google.android.gms",
     certificates = R.array.com_google_android_gms_fonts_certs
 )
-val robotofont = GoogleFont("Roboto")
+val robotofont = GoogleFont("DM Sans")
 
 val roboto = FontFamily(
     Font(googleFont = robotofont, fontProvider = provider)
@@ -26,7 +26,7 @@ val roboto = FontFamily(
 val x = TextStyle(
 
     fontFamily = roboto,
-    fontWeight = FontWeight.Black,
+    fontWeight = FontWeight.Normal,
     fontSize = 16.sp,
     lineHeight = 24.sp,
     letterSpacing = 0.5.sp

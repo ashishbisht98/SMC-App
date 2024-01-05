@@ -1,5 +1,6 @@
 package `in`.gov.edudel.smcapp.ui.screens
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -25,6 +26,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -43,12 +45,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.NavUtils
 import `in`.gov.edudel.smcapp.api
 import `in`.gov.edudel.smcapp.models.Meeting
 import `in`.gov.edudel.smcapp.models.Member
+import `in`.gov.edudel.smcapp.ui.screens.ui.theme.roboto
 import `in`.gov.edudel.smcapp.ui.theme.SMCAppTheme
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 class MeetingDetails : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -75,17 +81,23 @@ class MeetingDetails : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-
                     Scaffold(topBar = {
                         TopAppBar(
-                            title = { Text(text = "Meeting Details") },
+                            title = { Text(text = "Meeting Details", fontFamily = roboto) },
                             navigationIcon = {
                                 Icon(
                                     imageVector = Icons.Default.ArrowBack,
                                     contentDescription = "Back",
-                                    modifier = Modifier.padding(end = 15.dp)
+                                    modifier = Modifier.padding(15.dp)
                                         .clickable { onNavigateUp() }
                                 )
+                                IconButton(onClick = {
+                                    NavUtils.navigateUpTo(
+                                        this,
+                                        Intent(this, HomeActivity::class.java)
+                                    )
+                                }) {
+                                }
                             })
                     },
                         content = {
@@ -117,7 +129,7 @@ fun MeetingDetailsUI(meeting: Meeting?, padding: PaddingValues) {
 
         ) {
 
-        Text("Basic Info", Modifier.offset(8.dp), fontSize = 16.sp)
+        Text("Basic Info", Modifier.offset(8.dp), fontFamily = roboto, fontSize = 16.sp, fontWeight = FontWeight.Bold)
         Card(
             Modifier
                 .padding(top = 5.dp)
@@ -125,28 +137,28 @@ fun MeetingDetailsUI(meeting: Meeting?, padding: PaddingValues) {
         ) {
             Column(Modifier.padding(10.dp)) {
                 Row {
-                    Text("Title: ")
-                    Text(meeting.title, fontWeight = FontWeight.Bold)
+                    Text("Title: ", fontFamily = roboto)
+                    Text(meeting.title, fontWeight = FontWeight.Bold, fontFamily = roboto)
                 }
                 Row {
-                    Text("Agenda: ")
-                    Text(meeting.agenda, fontWeight = FontWeight.Bold)
+                    Text("Agenda: ", fontFamily = roboto)
+                    Text(meeting.agenda, fontWeight = FontWeight.Bold, fontFamily = roboto)
                 }
                 Row {
-                    Text("Date: ")
-                    Text(meeting.date.toString(), fontWeight = FontWeight.Bold)
+                    Text("Date: ", fontFamily = roboto)
+                    Text(meeting.date.toString(), fontWeight = FontWeight.Bold, fontFamily = roboto)
                 }
                 Row {
-                    Text("Time: ")
-                    Text(meeting.time.toString(), fontWeight = FontWeight.Bold)
+                    Text("Time: ", fontFamily = roboto)
+                    Text(meeting.time.format(DateTimeFormatter.ofPattern("hh:mm a", Locale.US)), fontFamily = roboto, fontWeight = FontWeight.Bold)
                 }
             }
         }
 
 
         Text(
-            "Minutes of the meeting",
-            Modifier
+            "Minutes of the meeting", fontFamily = roboto, fontWeight = FontWeight.Bold,
+            modifier = Modifier
                 .offset(8.dp)
                 .padding(top = 20.dp), fontSize = 16.sp
         )
@@ -158,10 +170,10 @@ fun MeetingDetailsUI(meeting: Meeting?, padding: PaddingValues) {
             Column(Modifier.padding(10.dp)) {
                 Row(Modifier.padding(8.dp).fillMaxWidth(), Arrangement.End) {
                     Icon(Icons.Default.Info, contentDescription = "download icon", Modifier.padding(end=8.dp))
-                    Text("Download Link", fontWeight = FontWeight.Bold)
+                    Text("Download Link", fontWeight = FontWeight.Bold, fontFamily = roboto)
                 }
 
-                Text("Brief: ", fontWeight = FontWeight.Bold)
+                Text("Brief: ", fontWeight = FontWeight.Bold, fontFamily = roboto)
 
                 Row {
                     Text("""
@@ -169,7 +181,7 @@ fun MeetingDetailsUI(meeting: Meeting?, padding: PaddingValues) {
                         Laudantium autem deserunt incidunt ullam iste, libero mollitia modi alias officiis temporibus corporis quod doloremque ex consectetur aut sit, itaque amet odio. Alias, fugiat. Aliquid iure nulla molestiae voluptas vel.
                         Ipsum sed inventore commodi, ut quaerat recusandae cumque deserunt incidunt beatae unde qui enim dolore, nesciunt ipsam corrupti eaque, quos sapiente at cum libero optio. Hic amet impedit deserunt facere.
                         Reprehenderit nihil enim, fuga, beatae ab eius hic alias impedit nesciunt vel nemo deserunt incidunt consectetur quaerat placeat earum. Doloribus tenetur cupiditate illum excepturi quae suscipit magni dicta adipisci modi.
-                    """.trimIndent())
+                    """.trimIndent(), fontFamily = roboto)
 
                 }
 

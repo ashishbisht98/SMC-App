@@ -3,6 +3,7 @@ package `in`.gov.edudel.smcapp.ui.screens
 import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -44,6 +46,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -53,6 +56,7 @@ import androidx.compose.ui.unit.sp
 import `in`.gov.edudel.smcapp.R
 import `in`.gov.edudel.smcapp.api
 import `in`.gov.edudel.smcapp.models.Member
+import `in`.gov.edudel.smcapp.ui.screens.ui.theme.roboto
 
 
 @Composable
@@ -72,15 +76,15 @@ fun MembersTab() {
                 context.startActivity(Intent(context, AddMemberScreen::class.java))
             },
             modifier = Modifier
-                .padding(10.dp)
+                .padding(5.dp)
                 .height(50.dp)
                 .align(Alignment.End),
             colors = ButtonDefaults.buttonColors(contentColor = Color.White),
-            shape = RoundedCornerShape(8.dp)
+            shape = CircleShape
         )
         {
             Row(
-                modifier = Modifier.padding(horizontal = 8.dp),
+                modifier = Modifier.padding(horizontal = 0.dp),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -89,11 +93,11 @@ fun MembersTab() {
                     imageVector = Icons.Default.AddCircle,
                     contentDescription = null,
                     tint = Color.White,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.dp).padding(end = 5.dp)
                 )
 
                 Text(
-                    text = "Add Member",
+                    text = "Add Member",fontFamily = roboto
                     // style = MaterialTheme.typography.button
                 )
             }
@@ -128,9 +132,8 @@ fun PreviewLayoutMem() {
 fun MemberCard(member: Member) {
     val context = LocalContext.current
     ElevatedCard(modifier = Modifier
-        .fillMaxWidth()
-        .padding(5.dp)
-        .shadow(8.dp),
+        .padding(5.dp).background(color = Color.White, shape = CircleShape).wrapContentSize()
+        .shadow(10.dp, shape = CircleShape), shape = CircleShape,
         onClick = {
             context.startActivity(Intent(context, MemberProfile::class.java).apply {
                 putExtra("member.id", member.id.toString())
@@ -149,12 +152,12 @@ fun MemberCard(member: Member) {
             Spacer(modifier = Modifier.width(26.dp))
             Column(Modifier.weight(2f)) {
                 Text(
-                    text = member.name,
+                    text = member.name, fontFamily = roboto,
                     fontWeight = FontWeight.Bold,
                     fontSize = 15.sp
                 )
                 Text(
-                    text = member.memberType,
+                    text = member.memberType,fontFamily = roboto,
                     fontSize = 15.sp
                 )
             }
@@ -171,7 +174,7 @@ fun MemberCard(member: Member) {
                 DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
 
                     DropdownMenuItem(
-                        text = { Text(text = "Edit") },
+                        text = { Text(text = "Edit", fontFamily = roboto) },
                         onClick = { Toast.makeText(context, "Edit", Toast.LENGTH_SHORT).show() },
 
                         )
@@ -180,7 +183,7 @@ fun MemberCard(member: Member) {
                             .fillMaxWidth().padding(5.dp),
                         color = Color(0xFF83A2FF)
                     )
-                    DropdownMenuItem(text = { Text(text = "Delete") }, onClick =
+                    DropdownMenuItem(text = { Text(text = "Delete", fontFamily = roboto) }, onClick =
                     { Toast.makeText(context, "Delete", Toast.LENGTH_SHORT).show() }
                     )
                 }

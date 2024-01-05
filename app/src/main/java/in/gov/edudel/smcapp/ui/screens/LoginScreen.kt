@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +26,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.MenuItemColors
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -44,11 +47,13 @@ import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
+import `in`.gov.edudel.smcapp.ui.screens.ui.theme.roboto
 import `in`.gov.edudel.smcapp.ui.theme.SMCAppTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -80,31 +85,36 @@ class LoginScreen : ComponentActivity() {
         var isExpanded by remember { mutableStateOf(false) }
         var loginIdLabel by remember { mutableStateOf("") }
 
-            Card(
-                modifier = Modifier
-                    .padding(5.dp).wrapContentSize(), elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color(0xFFf2f6fc),
-                )
+        Card(
+            modifier = Modifier
+                .padding(5.dp)
+                .wrapContentSize(),
+            elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = Color(0xFFf2f6fc),
+            )
+        ) {
+            Column(
+                Modifier.padding(5.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Column(Modifier.padding(5.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
                 Text(
                     "Login to the SMC App",
                     modifier = Modifier.padding(10.dp),
+                    fontFamily = roboto,
+                    fontWeight = FontWeight.Black,
                     fontSize = 20.sp,
                 )
 
                 val types = listOf("Teacher Member", "Parent Member", "Social Worker", "HOS")
 
-                    ExposedDropdownMenuBox(
+                ExposedDropdownMenuBox(
                     expanded = isExpanded,
                     onExpandedChange = { isExpanded = !isExpanded }) {
                     OutlinedTextField(loginType, {}, readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded) },
-                        colors = ExposedDropdownMenuDefaults.textFieldColors(),
+                       // colors = ExposedDropdownMenuDefaults.textFieldColors(),
                         modifier = Modifier
                             .menuAnchor()
                             .padding(10.dp)
@@ -117,9 +127,10 @@ class LoginScreen : ComponentActivity() {
 
                     ExposedDropdownMenu(
                         expanded = isExpanded,
-                        onDismissRequest = { isExpanded = false }) {
+                        onDismissRequest = { isExpanded = false },Modifier.background(color = Color.White).padding()) {
                         types.forEach {
-                            DropdownMenuItem({ Text(it) },
+                            DropdownMenuItem({ Text(it, fontFamily = roboto, fontWeight = FontWeight.Black, fontSize = 15.sp) },
+
                                 {
                                     vm.loginType.value = it
                                     loginIdLabel = when (it) {
@@ -133,14 +144,14 @@ class LoginScreen : ComponentActivity() {
                 }
                 OutlinedTextField(
                     value = loginId, onValueChange = { vm.loginId.value = it },
-                    Modifier.padding(10.dp), label = { Text(loginIdLabel) },
+                    Modifier.padding(10.dp), label = { Text(loginIdLabel, fontFamily = roboto) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
                 Button(onClick = {
                     sendOtp()
                     vm.showOtpDialog.value = true
                 }) {
-                    Text(text = "Send OTP")
+                    Text(text = "Send OTP", fontFamily = roboto)
                 }
             }
         }
@@ -152,28 +163,29 @@ class LoginScreen : ComponentActivity() {
                     Modifier.padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text("Enter the otp sent to your mobile number XXX720")
+                    Text("Enter the otp sent to your mobile number XXX720", fontFamily = roboto)
 
                     var enteredOtp by remember { mutableStateOf("") }
                     OutlinedTextField(
                         value = enteredOtp, onValueChange = { enteredOtp = it },
                         Modifier.padding(bottom = 5.dp),
                         label = { Text("") },
-                        placeholder = { Text("Enter OTP") },
+                        placeholder = { Text("Enter OTP", fontFamily = roboto) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
-                    Button(onClick = {
-                        if (verifyOtp()) {
-                            finish()
-                            vm.showOtpDialog.value = false
-                            context.startActivity(Intent(context, HomeActivity::class.java))
-                        } else {
-                            Toast.makeText(context, "Wrong otp", Toast.LENGTH_SHORT).show()
-                        }
-                    },
+                    Button(
+                        onClick = {
+                            if (verifyOtp()) {
+                                finish()
+                                vm.showOtpDialog.value = false
+                                context.startActivity(Intent(context, HomeActivity::class.java))
+                            } else {
+                                Toast.makeText(context, "Wrong otp", Toast.LENGTH_SHORT).show()
+                            }
+                        },
                         Modifier.padding(bottom = 80.dp)
-                        ) {
-                        Text(text = "Submit")
+                    ) {
+                        Text(text = "Submit", fontFamily = roboto)
                     }
                 }
             }

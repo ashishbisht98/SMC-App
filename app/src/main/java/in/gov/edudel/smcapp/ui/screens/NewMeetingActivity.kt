@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -92,7 +93,7 @@ class NewMeetingActivity : ComponentActivity() {
                             )
                         }
                     ) {
-                        Box(modifier = Modifier.padding(it)) {
+                        Box(modifier = Modifier.padding(it), contentAlignment = Alignment.Center) {
                             NewMeeting()
                         }
                     }
@@ -114,11 +115,11 @@ class NewMeetingActivity : ComponentActivity() {
 
         ElevatedCard(
             Modifier
-                .fillMaxSize()
+                .wrapContentSize()
                 .padding(8.dp)
                 .shadow(8.dp),
         ) {
-            Column(
+            Column( verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(top = 16.dp)
             ) {

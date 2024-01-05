@@ -22,7 +22,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.outlined.AddCircle
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardElevation
 import androidx.compose.material3.Divider
@@ -49,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import `in`.gov.edudel.smcapp.R
 import `in`.gov.edudel.smcapp.models.Meeting
+import `in`.gov.edudel.smcapp.ui.screens.ui.theme.roboto
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -207,7 +210,7 @@ fun Meetingitem(m: Meeting) {
     Row(
         verticalAlignment = Alignment.CenterVertically, modifier = Modifier
             .padding(horizontal = 8.dp)
-            .height(120.dp)
+            .wrapContentHeight()
             .fillMaxWidth()
     ) {
         Box(contentAlignment = Alignment.Center) {
@@ -215,43 +218,49 @@ fun Meetingitem(m: Meeting) {
             Divider(
                 Modifier
                     .width(3.dp)
-                    .fillMaxHeight(),
+                    .height(140.dp),
                 color = Color(0xFFB4D4FF)
             )
-            Column(Modifier.background(color = Color(0xFFFFECD6), shape = CircleShape).size(60.dp).padding(10.dp),
-                verticalArrangement = Arrangement.Top , horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                Text(modifier = Modifier.background(color = Color(0xFFFFECD6),
-                    shape = CircleShape).padding(0.dp),
-                    color = Color.Black,
-                    text = "25",
-                    fontWeight = FontWeight.Black,
-                    //fontFamily = FontFamily.SansSerif,
-                    fontSize = 18.sp
-                )
-
-                Text(modifier = Modifier.padding(top=0.dp),
-                    color = Color(0x99000000),
-                    text = "dec",
-                    fontSize = 12.sp
-                )
+       Card (Modifier.background(color = Color.Transparent), shape = CircleShape, elevation = CardDefaults.cardElevation(10.dp)){
+           Column(
+               Modifier
+                   .background(color = Color(0xFFFFECD6), shape = CircleShape)
+                   .size(50.dp)
+                   .padding(10.dp),
+               verticalArrangement = Arrangement.Top , horizontalAlignment = Alignment.CenterHorizontally
+           ) {
+               Text(modifier = Modifier
+                   .background(
+                       color = Color(0xFFFFECD6),
+                       shape = CircleShape
+                   )
+                   .padding(0.dp),
+                   color = Color.Black,
+                   text = "25",
+                   fontWeight = FontWeight.Black,
+                   fontFamily = roboto,
+                   fontSize = 14.sp
+               )
+               Text(modifier = Modifier.padding(0.dp),
+                   color = Color(0x99000000),
+                   text = "Dec",
+                   fontFamily = roboto,
+                   fontSize = 10.sp, fontWeight = FontWeight.W900
+               )
            }
-
+       }
         }
         MeetingCard(m)
-
     }
-
 }
-
 @Composable
 fun MeetingList(list: List<Meeting>) {
     val context = LocalContext.current
     Scaffold(floatingActionButton = {
         ExtendedFloatingActionButton(
             onClick = { context.startActivity(Intent(context, NewMeetingActivity::class.java))},
-            icon = { Icon(Icons.Filled.AddCircle, "Extended floating action button.") },
-            text = { Text(text = "Create Meeting") }, containerColor = Color(0xffc4eed0)
+            icon = { Icon(Icons.Outlined.AddCircle, "Extended floating action button.") },
+            text = { Text(text = "Create Meeting", fontFamily = roboto, fontWeight = FontWeight.Bold, fontSize = 15.sp) }, containerColor = Color(0xffc4eed0), shape = CircleShape
             )
 
     }) { abc ->
